@@ -1,0 +1,2 @@
+create a folder with the project, add an index.html for that project
+

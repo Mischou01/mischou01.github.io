@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Post | Mischou01</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-content {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: var(--text-secondary);
+        }
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+        .article-body {
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <a href="/#posts" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        
+        <div class="card" style="margin-top: 20px;">
+            <h1 style="margin-bottom: 10px;">My First Blog Post</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;"><i class="fas fa-calendar"></i> April 28, 2026</p>
+            
+            <div class="article-body">
+                <p>Welcome to my first blog post! This might be the last one, or the first of many, or somewhere in between there, who knows.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Apply theme from local storage
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+</body>
+</html>

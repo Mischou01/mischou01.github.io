@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mischou01 | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for a modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            
+            <ul class="nav-links">
+                <li><a href="#" class="nav-btn active" data-target="home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#" class="nav-btn" data-target="about"><i class="fas fa-user"></i> About</a></li>
+                <li><a href="#" class="nav-btn" data-target="projects"><i class="fas fa-code"></i> Projects</a></li>
+                <li><a href="#" class="nav-btn" data-target="posts"><i class="fas fa-pen-nib"></i> Posts</a></li>
+                <li><a href="#" class="nav-btn" data-target="links"><i class="fas fa-link"></i> Links</a></li>
+            </ul>
+
+            <div class="theme-switch-wrapper">
+                <i class="fas fa-sun"></i>
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+                <i class="fas fa-moon"></i>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <section id="home" class="active-section">
+                <h1>Welcome</h1>
+                <p>This website is currently under construction.</p>
+                
+                <h2 style="margin-top: 40px; margin-bottom: 20px;">Newest Updates</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Coming Soon</h3>
+                        <p>Newest articles and projects will appear here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="hidden-section">
+                <h1>About Me</h1>
+                <p>I build things. Check back soon for more details, might show some projects!</p>
+		<p>I might even add some actual About - info some day...<p>
+            </section>
+
+            <section id="projects" class="hidden-section">
+                <h1>My Projects</h1>
+                <div class="card-grid">
+                    <!--  <div class="card"> !
+                        <h3>GitHub Repo</h3>
+                        <p>You can directly link a tile to an external repository.</p>
+                        <a href="https://github.com/mischou01/repo-name-or-so" target="_blank" class="card-link">View on GitHub &rarr;</a>
+                    </div>
+		    --> 
+                </div>
+            </section>
+
+            <section id="posts" class="hidden-section">
+                <h1>Posts</h1>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>My First Blog Post</h3>
+                        <p>First post / message!</p>
+                        <a href="/blog/first-post/" class="card-link">Read Post &rarr;</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="links" class="hidden-section">
+                <h1>Links & Contact</h1>
+                <div class="links-container">
+                    <a href="mailto:contact@omcconnell.net" class="link-item card">
+                        <i class="fas fa-envelope fa-2x"></i>
+                        <h3>Email</h3>
+                        <p>contact@omcconnell.net</p>
+                    </a>
+                    <a href="https://github.com/mischou01" target="_blank" class="link-item card">
+                        <i class="fab fa-github fa-2x"></i>
+                        <h3>GitHub</h3>
+                        <p>@mischou01</p>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
