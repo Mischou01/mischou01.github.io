@@ -3,98 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mischou01 | Portfolio</title>
+    <title>mischou01</title>
+    <meta name="description" content="Projects and writing by mischou01.">
+    <meta property="og:title" content="mischou01">
+    <meta property="og:description" content="Projects and writing by mischou01.">
+    <meta property="og:url" content="https://omcconnell.net/">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script>
+        document.documentElement.classList.add('js');
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('theme')
+                ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        } catch {}
+    </script>
+    <link rel="preload" href="fonts/zodiak-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts for a modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
+    <div class="layout">
         <nav class="sidebar">
-            
+            <a href="#home" class="name">mischou01</a>
             <ul class="nav-links">
-                <li><a href="#" class="nav-btn active" data-target="home"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#" class="nav-btn" data-target="about"><i class="fas fa-user"></i> About</a></li>
-                <li><a href="#" class="nav-btn" data-target="projects"><i class="fas fa-code"></i> Projects</a></li>
-                <li><a href="#" class="nav-btn" data-target="posts"><i class="fas fa-pen-nib"></i> Posts</a></li>
-                <li><a href="#" class="nav-btn" data-target="links"><i class="fas fa-link"></i> Links</a></li>
+                <li style="--i: 0"><a href="#home">Home</a></li>
+                <li style="--i: 1"><a href="#about">About</a></li>
+                <li style="--i: 2"><a href="#projects">Projects</a></li>
+                <li style="--i: 3"><a href="#posts">Posts</a></li>
+                <li style="--i: 4"><a href="#links">Links</a></li>
             </ul>
-
-            <div class="theme-switch-wrapper">
-                <i class="fas fa-sun"></i>
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="slider round"></div>
-                </label>
-                <i class="fas fa-moon"></i>
-            </div>
+            <label class="search">
+                <input type="search" placeholder="Search" aria-label="Search projects and posts">
+                <kbd>/</kbd>
+            </label>
+            <button type="button" class="theme-toggle">Dark mode</button>
         </nav>
 
-        <!-- Main Content Area -->
         <main class="content">
-            <section id="home" class="active-section">
-                <h1>Welcome</h1>
-                <p>This website is currently under construction.</p>
-                
-                <h2 style="margin-top: 40px; margin-bottom: 20px;">Newest Updates</h2>
-                <div class="card-grid">
-                    <div class="card">
-                        <h3>Coming Soon</h3>
-                        <p>Newest articles and projects will appear here.</p>
-                    </div>
+            <section id="home">
+                <p class="lede">I build things and write down ideas. Here's what I've <a href="#projects">made</a> and <a href="#posts">written</a> so far.</p>
+                <div class="list" data-kind="all"></div>
+            </section>
+
+            <section id="about">
+                <p class="lede">I build things.</p>
+                <div class="prose">
+                    <p>Check back soon for more details, might show some projects!</p>
+                    <p>I might even add some actual About - info some day...</p>
                 </div>
             </section>
 
-            <section id="about" class="hidden-section">
-                <h1>About Me</h1>
-                <p>I build things. Check back soon for more details, might show some projects!</p>
-		<p>I might even add some actual About - info some day...<p>
+            <section id="projects">
+                <p class="lede">Things I've built.</p>
+                <div class="list" data-kind="project"></div>
             </section>
 
-            <section id="projects" class="hidden-section">
-                <h1>My Projects</h1>
-                <div class="card-grid">
-                    <!--  <div class="card"> !
-                        <h3>GitHub Repo</h3>
-                        <p>You can directly link a tile to an external repository.</p>
-                        <a href="https://github.com/mischou01/repo-name-or-so" target="_blank" class="card-link">View on GitHub &rarr;</a>
-                    </div>
-		    --> 
-                </div>
+            <section id="posts">
+                <p class="lede">Ideas, notes, and the occasional write-up.</p>
+                <div class="list" data-kind="post"></div>
             </section>
 
-            <section id="posts" class="hidden-section">
-                <h1>Posts</h1>
-                <div class="card-grid">
-                    <div class="card">
-                        <h3>My First Blog Post</h3>
-                        <p>First post / message!</p>
-                        <a href="/blog/first-post/" class="card-link">Read Post &rarr;</a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="links" class="hidden-section">
-                <h1>Links & Contact</h1>
-                <div class="links-container">
-                    <a href="mailto:contact@omcconnell.net" class="link-item card">
-                        <i class="fas fa-envelope fa-2x"></i>
-                        <h3>Email</h3>
-                        <p>contact@omcconnell.net</p>
+            <section id="links">
+                <p class="lede">Say hi.</p>
+                <div class="list">
+                    <a class="row" href="mailto:contact@omcconnell.net">
+                        <span class="meta">Email</span>
+                        <span class="title">contact@omcconnell.net</span>
                     </a>
-                    <a href="https://github.com/mischou01" target="_blank" class="link-item card">
-                        <i class="fab fa-github fa-2x"></i>
-                        <h3>GitHub</h3>
-                        <p>@mischou01</p>
+                    <a class="row" href="https://github.com/mischou01" target="_blank" rel="noopener">
+                        <span class="meta">GitHub</span>
+                        <span class="title">@mischou01</span>
                     </a>
                 </div>
             </section>
         </main>
     </div>
-    
+
+    <script src="content.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

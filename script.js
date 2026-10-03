@@ -1,84 +1,111 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // ---- Theme Switching Logic ----
-    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-    const currentTheme = localStorage.getItem('theme');
+const root = document.documentElement;
+const toggle = document.querySelector('.theme-toggle');
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
-    if (currentTheme) {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        if (currentTheme === 'dark') {
-            toggleSwitch.checked = true;
-        }
-    } else {
-        // Check for system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            toggleSwitch.checked = true;
-        }
-    }
+function setTheme(theme) {
+    root.dataset.theme = theme;
+    toggle.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
+}
 
-    function switchTheme(e) {
-        if (e.target.checked) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-        }    
-    }
+setTheme(root.dataset.theme);
 
-    toggleSwitch.addEventListener('change', switchTheme, false);
+toggle.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    const apply = () => {
+        setTheme(next);
+        try { localStorage.setItem('theme', next); } catch {}
+    };
 
-    // ---- Navigation Logic ----
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const navInlineButtons = document.querySelectorAll('.nav-btn-inline');
-    const sections = document.querySelectorAll('.content section');
+    if (!document.startViewTransition || reduceMotion.matches) return apply();
 
-    function navigateToSection(targetId) {
-        // Hide all sections
-        sections.forEach(section => {
-            section.classList.remove('active-section');
-            section.classList.add('hidden-section');
-        });
+    const box = toggle.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const y = box.top + box.height / 2;
+    const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
 
-        // Show target section
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-            targetSection.classList.remove('hidden-section');
-            targetSection.classList.add('active-section');
-        }
-
-        // Update active state on sidebar nav
-        navButtons.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-target') === targetId) {
-                btn.classList.add('active');
-            }
-        });
-    }
-
-    // Attach click events to sidebar buttons
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = btn.getAttribute('data-target');
-            navigateToSection(target);
-        });
+    document.startViewTransition(apply).ready.then(() => {
+        root.animate(
+            { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+            { duration: 600, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
+        );
     });
-
-    // Attach click events to inline buttons (like "Learn more about me")
-    navInlineButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = btn.getAttribute('data-target');
-            navigateToSection(target);
-        });
-    });
-
-    // Optional: Handle hash in URL on load
-    if (window.location.hash) {
-        const hash = window.location.hash.substring(1); // remove '#'
-        if (document.getElementById(hash)) {
-            navigateToSection(hash);
-        }
-    }
 });
+
+const sections = [...document.querySelectorAll('.content section')];
+const navLinks = document.querySelectorAll('.nav-links a');
+
+function showSection() {
+    const id = location.hash.slice(1);
+    const target = sections.find(s => s.id === id) ?? sections[0];
+    sections.forEach(s => s.classList.toggle('active-section', s === target));
+    navLinks.forEach(a => a.classList.toggle('active', a.hash === '#' + target.id));
+}
+
+if (sections.length) {
+    window.addEventListener('hashchange', showSection);
+    showSection();
+}
+
+function row(entry, showKind, i) {
+    const kind = entry.kind === 'post' ? 'Post' : 'Project';
+    const external = /^https?:/.test(entry.url);
+    const haystack = [entry.title, entry.blurb, kind, entry.date].join(' ').toLowerCase();
+    return `
+        <a class="row" href="${entry.url}" style="--i: ${i}" data-search="${haystack.replaceAll('"', '&quot;')}"${external ? ' target="_blank" rel="noopener"' : ''}>
+            <span class="meta">${entry.date}</span>
+            <span><span class="title">${entry.title}</span><span class="blurb">${entry.blurb}</span></span>
+            ${showKind ? `<span class="kind">${kind}</span>` : ''}
+        </a>`;
+}
+
+const lists = [...document.querySelectorAll('.list[data-kind]')];
+
+lists.forEach(list => {
+    const kind = list.dataset.kind;
+    const items = (typeof entries === 'undefined' ? [] : entries)
+        .filter(e => kind === 'all' || e.kind === kind)
+        .sort((a, b) => b.date.localeCompare(a.date));
+    list.innerHTML = items.map((e, i) => row(e, kind === 'all', i)).join('') + '<p class="empty"></p>';
+    filterList(list, '');
+});
+
+function filterList(list, query) {
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const rows = list.querySelectorAll('.row');
+    let shown = 0;
+    rows.forEach(r => {
+        const hit = terms.every(t => r.dataset.search.includes(t));
+        r.hidden = !hit;
+        if (hit) r.style.setProperty('--i', shown++);
+    });
+    const empty = list.querySelector('.empty');
+    empty.hidden = shown > 0;
+    empty.textContent = rows.length ? `Nothing matches "${query.trim()}".` : 'Nothing here yet.';
+}
+
+const search = document.querySelector('.search input');
+const homeList = document.querySelector('.list[data-kind="all"]');
+
+if (search) {
+    search.addEventListener('input', () => {
+        // pushState instead of location.hash, which steals focus from the input
+        if (!document.querySelector('#home.active-section')) {
+            history.pushState(null, '', '#home');
+            showSection();
+        }
+        filterList(homeList, search.value);
+    });
+
+    search.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        search.value = '';
+        filterList(homeList, '');
+        search.blur();
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key !== '/' || e.target.closest('input, textarea')) return;
+        e.preventDefault();
+        search.focus();
+    });
+}
