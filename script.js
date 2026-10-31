@@ -16,14 +16,24 @@ toggle.addEventListener('click', () => {
         try { localStorage.setItem('theme', next); } catch {}
     };
 
-    if (!document.startViewTransition || reduceMotion.matches) return apply();
+    // Colour transitions would otherwise fade text from the old theme inside the new one
+    root.classList.add('theme-switching');
+    const done = () => root.classList.remove('theme-switching');
+
+    if (!document.startViewTransition || reduceMotion.matches) {
+        apply();
+        getComputedStyle(root).color;
+        return done();
+    }
 
     const box = toggle.getBoundingClientRect();
     const x = box.left + box.width / 2;
     const y = box.top + box.height / 2;
     const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
 
-    document.startViewTransition(apply).ready.then(() => {
+    const transition = document.startViewTransition(apply);
+    transition.finished.finally(done);
+    transition.ready.then(() => {
         root.animate(
             { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
             { duration: 600, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
